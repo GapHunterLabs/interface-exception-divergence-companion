@@ -1,0 +1,43 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>dev.gaphunter.interfaceexceptiondivergencecompanion</id>
+    <name>Interface Exception Divergence Companion</name>
+    <vendor>Gap Hunter Labs</vendor>
+    <description><![CDATA[
+        <p>Flags a call through an interface-typed reference, wrapped
+        in a broad silent <code>catch (Exception e)</code>, where real
+        implementations of that interface method actually diverge on
+        which <code>RuntimeException</code> they throw directly -- a
+        Liskov Substitution violation the static interface type alone
+        can't warn you about: the caller was written assuming ONE
+        implementation's behavior (e.g. "PayPalGateway never throws
+        this"), but dependency injection can hand it any real
+        implementation at runtime.</p>
+        <p>Built on real Class Hierarchy Analysis (CHA) -- resolves
+        EVERY concrete implementation of the interface in the project
+        (the same mechanism a compiler/JIT uses to decide whether a
+        virtual call can be devirtualized), the opposite of how every
+        other mechanism in this catalog treats "more than one real
+        implementation" (always discarded as ambiguity elsewhere --
+        here it's the precondition).</p>
+        <p>Stated honestly: v0.1 only <code>RuntimeException</code>
+        subtypes thrown DIRECTLY in an implementation's own override
+        body -- never follows a call to another method to infer
+        transitive exceptions. No PMD/SonarQube/CodeQL rule found with
+        this exact angle; no dedicated Marketplace plugin found.</p>
+        <p>Free. No license nags, no telemetry, no network calls.</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <localInspection language="JAVA"
+            groupName="Interface Exception Divergence Companion"
+            displayName="Silently-caught interface call diverges across real implementations"
+            enabledByDefault="true"
+            level="WARNING"
+            implementationClass="dev.gaphunter.interfaceexceptiondivergencecompanion.inspection.InterfaceExceptionDivergenceInspection"/>
+        <notificationGroup id="Interface Exception Divergence Companion" displayType="BALLOON"/>
+    </extensions>
+</idea-plugin>
