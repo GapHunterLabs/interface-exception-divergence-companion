@@ -1,0 +1,10 @@
+<html>
+<body>
+Reports a call through an interface-typed reference, wrapped in a broad silent <code>catch (Exception e)</code>,
+where the project's implementations of that interface method throw different runtime exceptions directly.
+<!-- tooltip end -->
+<p>The caller was written for one implementation's behavior, but dependency injection can supply any of them at
+runtime, so the silent catch may hide a failure that only some implementations produce. Every concrete implementation
+in the project is resolved (class hierarchy analysis).</p>
+</body>
+</html>
